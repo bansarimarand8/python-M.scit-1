@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>To-Do List</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #f2f2f2;
+            margin: 40px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+        }
+
+        form {
+            background: white;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 8px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0 15px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 9px 15px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .add-btn {
+            background: green;
+            color: white;
+        }
+
+        .task {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+        }
+
+        .high {
+            color: red;
+        }
+
+        .medium {
+            color: orange;
+        }
+
+        .low {
+            color: green;
+        }
+
+        .actions {
+            margin-top: 10px;
+        }
+
+        a {
+            text-decoration: none;
+            background: #007bff;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+        }
+
+        .delete {
+            background: red;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>My To-Do List</h1>
+
+    <!-- Add Task -->
+    <form action="/add" method="POST">
+
+        <h2>Add New Task</h2>
+
+        <label>Title</label>
+        <input type="text" name="title"
+               placeholder="Enter task title"
+               maxlength="150"
+               required>
+
+        <label>Description</label>
+        <textarea name="description"
+                  maxlength="300"
+                  placeholder="Enter task description"></textarea>
+
+        <label>Priority</label>
+
+        <select name="priority" required>
+            <option value="High">High</option>
+            <option value="Medium" selected>Medium</option>
+            <option value="Low">Low</option>
+        </select>
+
+        <label>Due Date</label>
+        <input type="date"
+        name="due_date"
+        min="{{ today }}"
+        required>
+
+        <button class="add-btn" type="submit">
+            Add Task
+        </button>
+
+    </form>
+
+
+    <!-- Pending Tasks -->
+    <h2>Pending Tasks</h2>
+
+    {% if pending_tasks %}
+
+        {% for task in pending_tasks %}
+
+        <div class="task">
+
+            <h3>{{ task["title"] }}</h3>
+
+            <p>{{ task["description"] }}</p>
+
+            <p>
+                Priority:
+                <strong class="{{ task['priority']|lower }}">
+                    {{ task["priority"] }}
+                </strong>
+            </p>
+
+            <p>
+                Due Date: {{ task["due_date"] }}
+            </p>
+
+            <div class="actions">
+
+                <a href="/toggle/{{ task['id'] }}">
+                    Mark Completed
+                </a>
+
+                <a href="/edit/{{ task['id'] }}">
+                    Update
+                </a>
+
+                <form action="/delete/{{ task['id'] }}"
+                      method="POST"
+                      style="display:inline; padding:0; margin:0;">
+
+                    <button class="delete" type="submit">
+                        Delete
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <p>No pending tasks.</p>
+
+    {% endif %}
+
+
+    <!-- Completed Tasks -->
+    <h2>Completed Tasks</h2>
+
+    {% if completed_tasks %}
+
+        {% for task in completed_tasks %}
+
+        <div class="task">
+
+            <h3>{{ task["title"] }}</h3>
+
+            <p>{{ task["description"] }}</p>
+
+            <p>
+                Priority:
+                <strong class="{{ task['priority']|lower }}">
+                    {{ task["priority"] }}
+                </strong>
+            </p>
+
+            <p>
+                Due Date: {{ task["due_date"] }}
+            </p>
+
+            <div class="actions">
+
+                
+
+                <a href="/edit/{{ task['id'] }}">
+                    Update
+                </a>
+
+                <form action="/delete/{{ task['id'] }}"
+                      method="POST"
+                      style="display:inline; padding:0; margin:0;">
+
+                    <button class="delete" type="submit">
+                        Delete
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <p>No completed tasks.</p>
+
+    {% endif %}
+
+</div>
+
+</body>
+</html>
