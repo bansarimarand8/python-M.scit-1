@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>My To-Do List</title>
+
+    <style>
+
+        body {
+            font-family: Arial;
+            background: #f5f6fa;
+            margin: 0;
+        }
+
+        .header {
+            background: #343a40;
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .container {
+            width: 800px;
+            margin: 40px auto;
+        }
+
+        .form-box {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 0 10px #ddd;
+        }
+
+        input {
+            padding: 12px;
+            width: 30%;
+            margin-right: 10px;
+        }
+
+        button {
+            padding: 12px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 30px;
+            background: white;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background: #343a40;
+            color: white;
+        }
+
+        .pending {
+            color: orange;
+            font-weight: bold;
+        }
+
+        .error {
+            color: red;
+            margin-top: 15px;
+        }
+
+        a {
+            color: white;
+            text-decoration: none;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+    <h2>My To-Do List</h2>
+
+    <div>
+        Welcome, {{ username }} |
+        <a href="/logout">Logout</a>
+    </div>
+
+</div>
+
+
+<div class="container">
+
+    <div class="form-box">
+
+        <h3>Add New Task</h3>
+
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+
+        <form method="post" action="/tasks/add">
+
+            <input
+                type="text"
+                name="task_name"
+                placeholder="Task Name"
+                required
+            >
+
+            <input
+                type="text"
+                value="Pending"
+                readonly
+            >
+
+            <input
+                type="date"
+                name="due_date"
+                min="{{ today }}"
+                required
+            >
+
+            <button type="submit">
+                Add Task
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <table>
+
+        <tr>
+            <th>ID</th>
+            <th>Task Name</th>
+            <th>Status</th>
+            <th>Due Date</th>
+        </tr>
+
+        {% for task in tasks %}
+
+        <tr>
+
+            <td>{{ task.id }}</td>
+
+            <td>{{ task.task_name }}</td>
+
+            <td class="pending">
+                {{ task.status }}
+            </td>
+
+            <td>
+                {{ task.due_date }}
+            </td>
+
+        </tr>
+
+        {% else %}
+
+        <tr>
+            <td colspan="4">
+                No tasks found.
+            </td>
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+</div>
+
+</body>
+</html>
